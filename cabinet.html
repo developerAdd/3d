@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="files/swiper-bundle.min.css?_v=20230225230122">
+   <link rel="stylesheet" href="css/style.min.css?_v=20230225230122">
+   <script src="js/app.min.js?_v=20230225230122" defer></script>
+   <title>Решение 3д</title>
+</head>
+
+<body>
+   <div class="page">
+      <header class=" header">
+         <div class="header__content">
+            <div class="header__content__logo">
+               <img src="images/logo.svg" alt="логотип" class="img-con">
+            </div>
+            <div class="header__content__items">
+               <a href="index.html" class="header__content__item">главная</a>
+               <a href="tovars.html" class="header__content__item">корзина</a>
+               <a class="header__content__item">модель пользователя</a>
+            </div>
+         </div>
+      </header>
+      <section class="section">
+         <div class="cabinet__content">
+            <div class="cabinet__content__left">
+               <h2 class="section__title">параметры модели</h2>
+               <div class="cabinet__content__left__items">
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">Рост (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="180">
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">Обхват головы (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="50">
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">Ширина плеч (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="100">
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">Обхват груди (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="87">
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">Талия (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="75">
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">Обзват бедер (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="90">
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">Длинна рук (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="92.3">
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">Длинна ног (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="96">
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <span class="cabinet__content__left__item__title">размер стопы (см)</span>
+                     <input type="text" class="cabinet__content__left__item__input" placeholder="значение" value="27.8">
+                  </div>
+                  <div class="cabinet__content__left__item ">
+                     <button class="cabinet__content__left__item__button __noactive">сгенерировать</button>
+                  </div>
+                  <div class="cabinet__content__left__item">
+                     <button class="cabinet__content__left__item__button">загрузить</button>
+                  </div>
+               </div>
+            </div>
+            <div class="cabinet__content__right">
+            </div>
+         </div>
+      </section>
+      <footer class="footer">
+         <span class="footer__text">Данный сайт является демонстрационной моделью &copy</span>
+      </footer>
+   </div>
+   <script type="importmap">
+      {
+          "imports": {
+              "three": "https://unpkg.com/three@0.139.0/build/three.module.js",
+              "OrbitControls": "https://unpkg.com/three@0.139.0/examples/jsm/controls/OrbitControls.js",
+              "GLTFLoader": "https://unpkg.com/three@0.139.0/examples/jsm/loaders/GLTFLoader.js",
+              "RectAreaLightHelper": "https://unpkg.com/three@0.139.0/examples/jsm/helpers/RectAreaLightHelper.js",
+              "RectAreaLightUniformsLib": "https://unpkg.com/three@0.139.0/examples/jsm/lights/RectAreaLightUniformsLib.js"
+          }
+      }
+  </script>
+   <script type="module">
+      import * as THREE from 'three';
+      import { OrbitControls } from 'OrbitControls';
+      import { GLTFLoader } from 'GLTFLoader';
+      import { RectAreaLightHelper } from 'RectAreaLightHelper'
+      import { RectAreaLightUniformsLib } from 'RectAreaLightUniformsLib';
+
+      function init() {
+         let container = document.querySelector('.cabinet__content__right');
+
+         //Scene
+         const scene = new THREE.Scene()
+         scene.background = new THREE.Color("#E2DFE1");
+
+         //Camera
+         const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.25, 3000);
+         camera.position.set(0, 0, 1.75)
+
+         //render
+         const renderer = new THREE.WebGLRenderer({ antialias: true })
+         renderer.setSize(container.offsetWidth, container.offsetHeight)
+         container.appendChild(renderer.domElement)
+
+         let plain;
+         {
+            plain = new THREE.Mesh(
+               new THREE.PlaneGeometry(1000, 1000),
+               new THREE.MeshBasicMaterial({ color: "#E2DFE1" })
+            )
+            plain.reciveShadow = true;
+            plain.position.set(0, -1, 0)
+            plain.rotateX(-Math.PI / 2);
+            scene.add(plain)
+         }
+
+         // Model
+         {
+            const loader = new GLTFLoader();
+            loader.load('./files/Body.gltf', gltf => {
+               let box = new THREE.Box3().setFromObject(gltf.scene);
+               let center = new THREE.Vector3();
+               box.getCenter(center);
+               gltf.scene.position.sub(center); // center the model
+               gltf.scene.rotation.y = Math.PI;
+               scene.add(gltf.scene);
+            },
+               function (error) {
+                  console.log('Error: ' + error)
+               }
+            )
+         }
+
+         {
+            const light = new THREE.DirectionalLight(0xd7d7d7, 1)
+            light.position.set(-2, 0, 10)
+            light.lookAt(0, -1, 0)
+            scene.add(light)
+
+         }
+
+         {
+            const light = new THREE.DirectionalLight(0x606060, 1)
+            light.position.set(2, 0, 5)
+            light.lookAt(0, 1, 0)
+            scene.add(light)
+         }
+
+         RectAreaLightUniformsLib.init();
+         {
+            const rectLight = new THREE.RectAreaLight(0xd7d7d7, 1, 100, 100);
+            rectLight.position.set(-10, 0, 0)
+            rectLight.rotation.y = Math.PI + Math.PI / 4;
+            scene.add(rectLight)
+         }
+
+         {
+            const rectLight = new THREE.RectAreaLight(0xd7d7d7, 1, 100, 100);
+            rectLight.position.set(10, 0, 0)
+            rectLight.rotation.y = Math.PI - Math.PI / 4;
+            scene.add(rectLight)
+         }
+
+         //OrbitControls
+         const controls = new OrbitControls(camera, renderer.domElement);
+         controls.autoRotate = true;
+         controls.autoRotateSpeed = 5;
+         controls.enableDamping = true;
+
+         //Resize
+         window.addEventListener('resize', onWindowResize, false)
+
+         function onWindowResize() {
+            camera.aspect = container.offsetWidth / container.offsetHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(container.offsetWidth, container.offsetHeight)
+         }
+
+         // Animate
+         function animate() {
+            requestAnimationFrame(animate)
+            controls.update();
+            renderer.render(scene, camera)
+         }
+         animate()
+
+      }
+
+      init()
+   </script>
+</body>
+
+</html>
